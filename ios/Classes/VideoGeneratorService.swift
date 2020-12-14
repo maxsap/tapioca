@@ -17,7 +17,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
     // get video track
     let vtrack =  vidAsset.tracks(withMediaType: AVMediaType.video)
     print("eee")
-    guard let videoTrack:AVAssetTrack = vtrack[0] else {
+    guard let videoTrack:AVAssetTrack = vtrack[0] as AVAssetTrack? else {
       print("not found track")
       result(FlutterError(code: "video_processing_failed",
         message: "video track is not found.",
@@ -57,6 +57,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       compositionvideoTrack.preferredTransform = videoTrack.preferredTransform
       let size = videoTrack.naturalSize
       var filters  = [CALayer]()
+      var start:Double = -1
+      var end:Double = -1
       for (key, value) in processing  {
         switch key {
           case "Filter":
@@ -124,6 +126,11 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
           imglayer.frame = CGRect(x:CGFloat(imageOverlay.x.intValue), y: size.height - CGFloat(imageOverlay.y.intValue) - imageHeight, width: imageWidth, height: imageHeight)
           imglayer.opacity = 1
           filters.append(imglayer)
+          case "Trim":
+          start = value["start"] as! Double
+          end = value["end"] as! Double
+          print("start => \(start) end=> \(end)")
+          break
           default:
           print("Not implement filter name")
         }
@@ -159,6 +166,12 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       }
       assetExport.outputFileType = AVFileType.mp4
       assetExport.videoComposition = layercomposition
+    if (start >= 0 && end >= 0) {
+        let start = CMTimeMakeWithSeconds(start, preferredTimescale: 600)
+        let duration = CMTimeMakeWithSeconds(end, preferredTimescale: 600)
+        let range = CMTimeRangeMake(start: start, duration: duration)
+        assetExport.timeRange = range
+    }
 
       do { // delete old video
         try FileManager.default.removeItem(at: movieDestinationUrl)
