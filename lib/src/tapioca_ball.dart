@@ -24,7 +24,7 @@ abstract class TapiocaBall {
     return _ImageOverlay(bitmap, x, y);
   }
 
-  static TapiocaBall trim(int start, int end) {
+  static TapiocaBall trim(double start, double end) {
     return _Trim(start, end);
   }
 
@@ -104,8 +104,8 @@ class _ImageOverlay extends TapiocaBall {
 }
 
 class _Trim extends TapiocaBall {
-  final int start;
-  final int end;
+  final double start;
+  final double end;
 
   _Trim(this.start, this.end);
 
