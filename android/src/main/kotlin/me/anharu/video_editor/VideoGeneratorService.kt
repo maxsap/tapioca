@@ -12,6 +12,7 @@ import me.anharu.video_editor.ImageOverlay
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Paint.Align
 import android.graphics.Paint.ANTI_ALIAS_FLAG
+import com.daasuu.mp4compose.VideoFormatMimeType
 import me.anharu.video_editor.filter.GlColorBlendFilter
 import me.anharu.video_editor.filter.GlTextOverlayFilter
 
@@ -25,6 +26,8 @@ class VideoGeneratorService(
 ) : VideoGeneratorServiceInterface {
     override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity ) {
         val filters: MutableList<GlFilter> = mutableListOf()
+        var start: Long? = null;
+        var end: Long? = null;
         try {
             processing.forEach { (k, v) ->
                 when (k) {
@@ -41,6 +44,13 @@ class VideoGeneratorService(
                         val imageOverlay = ImageOverlay(v)
                         filters.add(GlImageOverlayFilter(imageOverlay))
                     }
+                    "Trim" -> {
+                        println("Got trim command, map is: $v")
+                        var temp: Int? = v[  "start"] as Int?
+                        start = temp?.toLong()
+                        temp = v[  "end"] as Int?
+                        end = temp?.toLong()
+                    }
                 }
             }
         } catch (e: Exception){
@@ -49,7 +59,11 @@ class VideoGeneratorService(
                 result.error("processing_data_invalid", "Processing data is invalid.", null)
             })
         }
-        composer.filter(GlFilterGroup( filters))
+        if (start != null && end != null) {
+            composer.trim(start!!*1000, end!!*1000)
+        }
+        composer
+                .filter(GlFilterGroup( filters))
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
