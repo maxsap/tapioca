@@ -24,8 +24,8 @@ abstract class TapiocaBall {
     return _ImageOverlay(bitmap, x, y);
   }
 
-  static TapiocaBall trim(double start, double end) {
-    return _Trim(start, end);
+  static TapiocaBall trim(double startMillis, double endMillis) {
+    return _Trim(startMillis, endMillis);
   }
 
   /// Returns a [Map<String, dynamic>] representation of this object.
@@ -104,13 +104,13 @@ class _ImageOverlay extends TapiocaBall {
 }
 
 class _Trim extends TapiocaBall {
-  final double start;
-  final double end;
+  final double startMillis;
+  final double endMillis;
 
-  _Trim(this.start, this.end);
+  _Trim(this.startMillis, this.endMillis);
 
   Map<String, dynamic> toMap() {
-    return {'start': start, 'end': end};
+    return {'startMillis': startMillis, 'endMillis': endMillis};
   }
 
   String toTypeName() {

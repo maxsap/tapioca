@@ -93,13 +93,14 @@ class _MyAppState extends State<MyApp> {
                           TapiocaBall.imageOverlay(imageBitmap, 300, 300),
                           TapiocaBall.textOverlay(
                               "text", 100, 10, 100, Color(0xffffc0cb)),
-                          TapiocaBall.trim(0.0, 5000.0)
+                          TapiocaBall.trim(0.0, 5000)
                         ];
                         if (_video != null) {
                           final cup = Cup(Content(_video.path), tapiocaBalls);
                           cup.suckUp(path).then((_) async {
                             print("finished");
-                            GallerySaver.saveVideo(path).then((bool success) {
+                            await GallerySaver.saveVideo(path)
+                                .then((bool success) {
                               print(success.toString());
                             });
                             navigatorKey.currentState.push(

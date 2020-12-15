@@ -26,8 +26,8 @@ class VideoGeneratorService(
 ) : VideoGeneratorServiceInterface {
     override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity ) {
         val filters: MutableList<GlFilter> = mutableListOf()
-        var start: Long? = null;
-        var end: Long? = null;
+        var start: Double? = null;
+        var end: Double? = null;
         try {
             processing.forEach { (k, v) ->
                 when (k) {
@@ -45,11 +45,8 @@ class VideoGeneratorService(
                         filters.add(GlImageOverlayFilter(imageOverlay))
                     }
                     "Trim" -> {
-                        println("Got trim command, map is: $v")
-                        var temp: Int? = v[  "start"] as Int?
-                        start = temp?.toLong()
-                        temp = v[  "end"] as Int?
-                        end = temp?.toLong()
+                        start = v["startMillis"] as Double?
+                        end = v["endMillis"] as Double?
                     }
                 }
             }
@@ -60,7 +57,7 @@ class VideoGeneratorService(
             })
         }
         if (start != null && end != null) {
-            composer.trim(start!!, end!!)
+            composer.trim(start!!.toLong(), end!!.toLong())
         }
         composer
                 .filter(GlFilterGroup( filters))

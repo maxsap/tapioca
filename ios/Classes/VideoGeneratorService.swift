@@ -127,9 +127,9 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
           imglayer.opacity = 1
           filters.append(imglayer)
           case "Trim":
-          start = value["start"] as! Double
-          end = value["end"] as! Double
-          print("start => \(start) end=> \(end)")
+          start = value["startMillis"] as! Double
+          end = value["endMillis"] as! Double
+          print("startMillis => \(start) endMillis=> \(end)")
           break
           default:
           print("Not implement filter name")
@@ -167,8 +167,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       assetExport.outputFileType = AVFileType.mp4
       assetExport.videoComposition = layercomposition
     if (start >= 0 && end >= 0) {
-        let start = CMTimeMakeWithSeconds(start, preferredTimescale: 1)
-        let duration = CMTimeMakeWithSeconds(end, preferredTimescale: 1)
+        let start = CMTimeMakeWithSeconds(start / 1000, preferredTimescale: 1)
+        let duration = CMTimeMakeWithSeconds(end / 1000 , preferredTimescale: 1)
         let range = CMTimeRangeMake(start: start, duration: duration)
         assetExport.timeRange = range
     }
