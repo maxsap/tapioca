@@ -60,7 +60,7 @@ class VideoGeneratorService(
             })
         }
         if (start != null && end != null) {
-            composer.trim(start!!*1000, end!!*1000)
+            composer.trim(start!!, end!!)
         }
         composer
                 .filter(GlFilterGroup( filters))

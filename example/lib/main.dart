@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
                           TapiocaBall.imageOverlay(imageBitmap, 300, 300),
                           TapiocaBall.textOverlay(
                               "text", 100, 10, 100, Color(0xffffc0cb)),
-                          TapiocaBall.trim(0, 5)
+                          TapiocaBall.trim(0.0, 5000.0)
                         ];
                         if (_video != null) {
                           final cup = Cup(Content(_video.path), tapiocaBalls);

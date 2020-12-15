@@ -167,8 +167,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
       assetExport.outputFileType = AVFileType.mp4
       assetExport.videoComposition = layercomposition
     if (start >= 0 && end >= 0) {
-        let start = CMTimeMakeWithSeconds(start, preferredTimescale: 600)
-        let duration = CMTimeMakeWithSeconds(end, preferredTimescale: 600)
+        let start = CMTimeMakeWithSeconds(start, preferredTimescale: NSEC_PER_SEC)
+        let duration = CMTimeMakeWithSeconds(end, preferredTimescale: NSEC_PER_SEC)
         let range = CMTimeRangeMake(start: start, duration: duration)
         assetExport.timeRange = range
     }
