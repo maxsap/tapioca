@@ -172,6 +172,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
         let range = CMTimeRangeMake(start: start, duration: duration)
         assetExport.timeRange = range
     }
+    
 
       do { // delete old video
         try FileManager.default.removeItem(at: movieDestinationUrl)

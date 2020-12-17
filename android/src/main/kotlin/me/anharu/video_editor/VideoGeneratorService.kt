@@ -59,8 +59,10 @@ class VideoGeneratorService(
         if (start != null && end != null) {
             composer.trim(start!!.toLong(), end!!.toLong())
         }
+        if (filters.isNotEmpty()) {
+            composer.filter(GlFilterGroup( filters))
+        }
         composer
-                .filter(GlFilterGroup( filters))
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
