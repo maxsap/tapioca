@@ -63,6 +63,7 @@ class VideoGeneratorService(
             composer.filter(GlFilterGroup( filters))
         }
         composer
+                .videoFormatMimeType(VideoFormatMimeType.MPEG4)
                 .listener(object : Mp4Composer.Listener {
                     override fun onProgress(progress: Double) {
                         println("onProgress = " + progress)
