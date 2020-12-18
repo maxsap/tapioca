@@ -135,25 +135,6 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
           print("Not implement filter name")
         }
       }
-      let videolayer = CALayer()
-      videolayer.frame = CGRect(x:0,y:0, width: size.width, height: size.height)
-      let parentlayer = CALayer()
-      parentlayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-      parentlayer.addSublayer(videolayer)
-      for item in filters {
-        parentlayer.addSublayer(item)
-      }
-      let layercomposition = AVMutableVideoComposition()
-      layercomposition.frameDuration = CMTime(value: 1, timescale:30)
-      layercomposition.renderSize = size
-      layercomposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videolayer, in: parentlayer)
-
-      let instruction = AVMutableVideoCompositionInstruction()
-      instruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: composition.duration)
-      let layerinstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionvideoTrack)
-      instruction.layerInstructions = [layerinstruction]
-      layercomposition.instructions = [instruction]
-
       let movieFilePath = destPath
       let movieDestinationUrl = URL(fileURLWithPath: movieFilePath)
       print(movieDestinationUrl)
@@ -165,7 +146,27 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
         return
       }
       assetExport.outputFileType = AVFileType.mp4
-      assetExport.videoComposition = layercomposition
+      if (!filters.isEmpty) {
+        let videolayer = CALayer()
+        videolayer.frame = CGRect(x:0,y:0, width: size.width, height: size.height)
+        let parentlayer = CALayer()
+        parentlayer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        parentlayer.addSublayer(videolayer)
+        for item in filters {
+          parentlayer.addSublayer(item)
+        }
+        let layercomposition = AVMutableVideoComposition()
+        layercomposition.frameDuration = CMTime(value: 1, timescale:30)
+        layercomposition.renderSize = size
+        layercomposition.animationTool = AVVideoCompositionCoreAnimationTool(postProcessingAsVideoLayer: videolayer, in: parentlayer)
+        let instruction = AVMutableVideoCompositionInstruction()
+        instruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: composition.duration)
+        let layerinstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionvideoTrack)
+        instruction.layerInstructions = [layerinstruction]
+        layercomposition.instructions = [instruction]
+        assetExport.videoComposition = layercomposition
+      }
+
     if (start >= 0 && end >= 0) {
         let start = CMTimeMakeWithSeconds(start / 1000, preferredTimescale: 1)
         let duration = CMTimeMakeWithSeconds(end / 1000 , preferredTimescale: 1)
